@@ -141,9 +141,21 @@
         .cta-content{position:relative;z-index:1}
         .cta-content .section-title{margin-bottom:1rem}
         .cta-content .section-desc{margin:0 auto 2.5rem;text-align:center}
-        .cta-email{display:block;margin-top:1.25rem;font-size:.9rem;color:var(--muted)}
-        .cta-email a{color:var(--text);text-decoration:none;transition:color .3s}
-        .cta-email a:hover{color:var(--accent)}
+        .contact-form{max-width:520px;margin:0 auto;display:flex;flex-direction:column;gap:1rem;text-align:left}
+        .form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+        .form-group{display:flex;flex-direction:column;gap:.4rem}
+        .form-group label{font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:500}
+        .form-group input,.form-group textarea,.form-group select{background:var(--bg3);border:1px solid var(--brd);border-radius:var(--rs);padding:.85rem 1rem;color:var(--text);font-family:var(--sans);font-size:.9rem;outline:none;transition:border-color .3s;resize:vertical}
+        .form-group input::placeholder,.form-group textarea::placeholder{color:rgba(138,138,150,.5)}
+        .form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:rgba(200,255,46,.3)}
+        .form-group select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238A8A96' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 1rem center;padding-right:2.5rem;cursor:pointer}
+        .form-group select option{background:var(--bg3);color:var(--text)}
+        .form-submit{margin-top:.5rem;align-self:center}
+        .form-success{display:none;text-align:center;padding:2rem;background:var(--adim);border:1px solid rgba(200,255,46,.2);border-radius:var(--r)}
+        .form-success h3{color:var(--accent);font-size:1.1rem;margin-bottom:.5rem}
+        .form-success p{color:var(--muted);font-size:.9rem}
+        .form-error{display:none;text-align:center;padding:1rem;background:rgba(255,60,60,.08);border:1px solid rgba(255,60,60,.2);border-radius:var(--rs);color:#ff6b6b;font-size:.85rem;margin-top:.5rem}
+        @media(max-width:600px){.form-row{grid-template-columns:1fr}}
 
         /* FOOTER */
         footer{border-top:1px solid var(--brd);padding:3rem 2rem;background:var(--bg)}
@@ -406,9 +418,49 @@
     <div class="cta-content reveal">
         <p class="section-label">Contacto</p>
         <h2 class="section-title">¿Listo para <em>transformar</em><br>tu operación?</h2>
-        <p class="section-desc">Conversemos sobre cómo podemos ayudarte a digitalizar, automatizar y escalar tu negocio.</p>
-        <a href="mailto:info@solvantic.do" class="btn-primary">Escríbenos →</a>
-        <span class="cta-email"><a href="mailto:"></a></span>
+        <p class="section-desc">Cuéntanos sobre tu proyecto y nos ponemos en contacto contigo.</p>
+        <div class="contact-form" id="contactForm">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="nombre">Nombre</label>
+                    <input type="text" id="nombre" name="nombre" placeholder="Tu nombre completo" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="tu@empresa.com" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="telefono">Teléfono</label>
+                    <input type="tel" id="telefono" name="telefono" placeholder="+1 (809) 000-0000">
+                </div>
+                <div class="form-group">
+                    <label for="tipo">¿Qué necesitas?</label>
+                    <select id="tipo" name="tipo">
+                        <option value="" disabled selected>Selecciona una opción</option>
+                        <option value="implementacion">Implementación de plataformas</option>
+                        <option value="automatizacion">Automatización (OCR + IA)</option>
+                        <option value="integraciones">Integraciones y APIs</option>
+                        <option value="analitica">Analítica e inteligencia de negocios</option>
+                        <option value="ecommerce">E-Commerce</option>
+                        <option value="otro">Otro</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="mensaje">Cuéntanos más</label>
+                <textarea id="mensaje" name="mensaje" rows="4" placeholder="Describe brevemente tu proyecto o necesidad..."></textarea>
+            </div>
+            <div class="form-submit">
+                <button type="button" class="btn-primary" id="submitBtn" onclick="submitForm()">Enviar solicitud →</button>
+            </div>
+            <div class="form-error" id="formError">Hubo un error al enviar. Por favor intenta de nuevo.</div>
+        </div>
+        <div class="form-success" id="formSuccess">
+            <h3>¡Mensaje enviado!</h3>
+            <p>Gracias por tu interés. Nos pondremos en contacto contigo pronto.</p>
+        </div>
     </div>
 </section>
 
@@ -426,7 +478,7 @@
             <a href="#contacto">Contacto</a>
         </div>
         <div class="footer-contact">
-            <a href="mailto:info@solvantic.do"></a>
+            <a href="#contacto">Contáctanos</a>
         </div>
     </div>
 </footer>
@@ -437,6 +489,64 @@ mt.addEventListener('click',()=>nl.classList.toggle('open'));
 nl.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>nl.classList.remove('open')));
 const obs=new IntersectionObserver(es=>{es.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('visible'),i*80);obs.unobserve(e.target)}})},{threshold:.12});
 document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+// ====== FORM SUBMISSION TO MAKE.COM ======
+// Replace this URL with your Make.com webhook URL
+const MAKE_WEBHOOK_URL = 'https://hook.us1.make.com/TU-WEBHOOK-ID-AQUI';
+
+async function submitForm() {
+    const btn = document.getElementById('submitBtn');
+    const form = document.getElementById('contactForm');
+    const success = document.getElementById('formSuccess');
+    const error = document.getElementById('formError');
+
+    const nombre = document.getElementById('nombre').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const telefono = document.getElementById('telefono').value.trim();
+    const tipo = document.getElementById('tipo').value;
+    const mensaje = document.getElementById('mensaje').value.trim();
+
+    // Basic validation
+    if (!nombre || !email) {
+        error.textContent = 'Por favor completa al menos tu nombre y email.';
+        error.style.display = 'block';
+        return;
+    }
+
+    error.style.display = 'none';
+    btn.textContent = 'Enviando...';
+    btn.style.opacity = '0.6';
+    btn.style.pointerEvents = 'none';
+
+    try {
+        const response = await fetch(MAKE_WEBHOOK_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                nombre,
+                email,
+                telefono,
+                tipo,
+                mensaje,
+                fecha: new Date().toISOString(),
+                origen: 'solvantic-web'
+            })
+        });
+
+        if (response.ok) {
+            form.style.display = 'none';
+            success.style.display = 'block';
+        } else {
+            throw new Error('Response not ok');
+        }
+    } catch (err) {
+        error.textContent = 'Hubo un error al enviar. Por favor intenta de nuevo.';
+        error.style.display = 'block';
+        btn.textContent = 'Enviar solicitud →';
+        btn.style.opacity = '1';
+        btn.style.pointerEvents = 'auto';
+    }
+}
 </script>
 </body>
 </html>
